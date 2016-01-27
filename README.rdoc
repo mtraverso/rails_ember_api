@@ -1,0 +1,3 @@
+Rails - Ember - Training
+
+This is the API written in Rails

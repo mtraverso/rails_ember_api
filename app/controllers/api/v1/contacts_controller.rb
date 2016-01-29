@@ -1,11 +1,13 @@
 class Api::V1::ContactsController < ApplicationController
   def index
-    render json: Contact.all
+    @contacts = Contact.all
+    cont ={'contacts' => @contacts}
+       render :json => cont
   end
   
   def show
      if Contact.find(params[:id])
-      render json: Contact.find(params[:id])
+      render json: Contact.find(params[:id]).as_json(root: true)
     else
       render json: '{"result":"Error"}'
     end
@@ -13,8 +15,10 @@ class Api::V1::ContactsController < ApplicationController
   
   def create
     @contact = Contact.new(contact_params)
+    puts contact_params
     if @contact.save
-      render json: '{"result":"OK"}'
+      cont ={'contact' => @contact}
+      render :json => cont
     else
       render json: '{"result":"Error"}'
     end
@@ -37,7 +41,7 @@ class Api::V1::ContactsController < ApplicationController
   end
   
   def contact_params
-    params.permit(:first_name, :last_name, :email, :phone)
+    params.require(:contact).permit(:first_name, :last_name, :email, :phone)
   end
   
 end
